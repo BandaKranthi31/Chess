@@ -36,11 +36,18 @@ public class Main{
         board[7][6] = new Cell(new Knight(7, 6, 'W'));
         board[7][7] = new Cell(new Rook(7, 7, 'W'));
 
+        board[3][2] = new Cell(new Pawn(3, 2, 'B'));
+        board[4][1] = new Cell(new Pawn(4, 3, 'W'));
+
+
         printBoard();
 
-        ArrayList<List> pMoves = generateMoves(6, 0);
+        ArrayList<List> pMoves = generateMoves(4, 1);
 
         System.out.println(pMoves);
+        
+        // boolean mac = isValid(3, 0);
+        // System.out.println(mac);
     }
 
     public static ArrayList<List> generateMoves(int row, int col){
@@ -63,32 +70,62 @@ public class Main{
         if (pawn.player == 'B'){
             int nextRow = pawn.row + 1, nextCol = pawn.col;
 
-            if (isInBounds(nextRow, nextCol)) {
+            if (isInBounds(nextRow, nextCol) && isValid(nextRow, nextCol)) {
                 pawnMoves.add(Arrays.asList(nextRow, nextCol));
             }
 
             if (!pawn.hasMadeFirstMove){
                 int nextRow1 = pawn.row + 2, nextCol1 = pawn.col;
 
-                if (isInBounds(nextRow1, nextCol1)) {
+                if (isInBounds(nextRow1, nextCol1) && isValid(nextRow1, nextCol1)) {
                     pawnMoves.add(Arrays.asList(nextRow1, nextCol1));
                 }
+            }  
+            int drow = pawn.row+1;
+            int drcol = pawn.col+1;
+            int dlcol = pawn.col-1;
+
+            if(toCapture(drow, dlcol, pawn.player)){
+              pawnMoves.add(Arrays.asList(drow,dlcol));
             }
-        }else{
+
+            if(toCapture(drow, drcol, pawn.player)){
+             pawnMoves.add(Arrays.asList(drow,drcol));
+            }
+
+
+        }
+        else{
             int nextRow = pawn.row - 1, nextCol = pawn.col;
 
-            if (isInBounds(nextRow, nextCol)) {
+            if (isInBounds(nextRow, nextCol) && isValid(nextRow, nextCol)) {
                 pawnMoves.add(Arrays.asList(nextRow, nextCol));
             }
 
             if (!pawn.hasMadeFirstMove){
                 int nextRow1 = pawn.row - 2, nextCol1 = pawn.col;
 
-                if (isInBounds(nextRow1, nextCol1)) {
+                if (isInBounds(nextRow1, nextCol1) && isValid(nextRow1, nextCol1)) {
                     pawnMoves.add(Arrays.asList(nextRow1, nextCol1));
                 }
             }
+
+            int drow = pawn.row-1;
+            int drcol = pawn.col-1;
+            int dlcol = pawn.col+1;
+    
+            if(toCapture(drow, dlcol, pawn.player)){
+              pawnMoves.add(Arrays.asList(drow,dlcol));
+            }
+    
+            if(toCapture(drow, drcol, pawn.player)){
+             pawnMoves.add(Arrays.asList(drow,drcol));
+            }
         }
+
+      
+
+        
 
 
         return pawnMoves;
@@ -96,6 +133,22 @@ public class Main{
 
     private static boolean isInBounds(int row, int col){
         return row < 8 && col < 8;
+    }
+
+
+
+    private static boolean toCapture(int row, int col, char player){
+        if(isInBounds(row, col) && (board[row][col]!= null) && board[row][col].p1.player != player){
+             return  true;
+        }
+        return  false;
+    }
+
+    private  static boolean isValid(int row,int col){
+        if(board[row][col]== null){
+            return  true;
+        }
+        return false;
     }
 
     private static void printBoard(){
