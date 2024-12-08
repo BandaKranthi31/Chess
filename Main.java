@@ -10,9 +10,9 @@ public class Main{
         board = new Cell[8][8];
      
         for (int col = 0; col < 8; col++){
-            if (col == 0) {
-                continue;
-            }
+            // if (col == 0) {
+            //     continue;
+            // }
 
             Cell bCell = new Cell(new Pawn(1, col, 'B'));
             board[1][col] = bCell;
@@ -43,11 +43,13 @@ public class Main{
         // board[3][2] = new Cell(new Pawn(3, 2, 'B'));
         // board[4][1] = new Cell(new Pawn(4, 3, 'W'));
 
-        board[3][0] = new Cell(new Rook(3, 0, 'B'));
+        // board[3][0] = new Cell(new Rook(3, 0, 'B'));
+
+        board[4][2] = new Cell(new Bishop(4, 2, 'B'));
 
         printBoard();
 
-        ArrayList<List> pMoves = generateMoves(3, 0);
+        ArrayList<List> pMoves = generateMoves(4, 2);
 
         System.out.println(pMoves);
         
@@ -68,6 +70,10 @@ public class Main{
 
         if (cell.p1 instanceof Rook){
             return generateMovesForRook((Rook) cell.p1);
+        }
+
+        if (cell.p1 instanceof Bishop){
+            return generateMovesForBishop((Bishop) cell.p1);
         }
         
         return null;
@@ -210,6 +216,32 @@ public class Main{
         return validMoves;
     }
 
+    public static ArrayList<List> generateMovesForBishop(Bishop bishop){
+        int[][] directions = {{1,1}, {1,-1}, {-1,-1}, {-1,1}};
+        
+        ArrayList<List> validMoves = new ArrayList<>();
+
+        for (int i = 0; i < directions.length; i++){
+            int r = directions[i][0], c = directions[i][1];
+
+            int curRow = bishop.row + r, curCol = bishop.col + c;
+
+            while (isInBounds(curRow, curCol)) {
+                if (!isValid(curRow, curCol)) {
+                    if (board[curRow][curCol].p1.player != bishop.player){
+                        validMoves.add(Arrays.asList(curRow, curCol));
+                    }
+                    break;
+                }
+                validMoves.add(Arrays.asList(curRow, curCol));
+                curRow += r;
+                curCol += c;
+            }
+
+        }
+        return validMoves;
+    }
+
     private static boolean isInBounds(int row, int col){
         return row >= 0 && row < 8 && col >=0 && col < 8;
     }
@@ -234,9 +266,9 @@ public class Main{
                 Cell cell = board[i][j];
 
                 if (cell == null){
-                    System.out.print("-1");
+                    System.out.print("- ");
                 }else{
-                    System.out.print(cell.p1.player);
+                    System.out.print(cell.p1.player + " ");
                 }
                 
             }
