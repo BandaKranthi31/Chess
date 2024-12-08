@@ -10,6 +10,10 @@ public class Main{
         board = new Cell[8][8];
      
         for (int col = 0; col < 8; col++){
+            if (col == 0) {
+                continue;
+            }
+
             Cell bCell = new Cell(new Pawn(1, col, 'B'));
             board[1][col] = bCell;
 
@@ -36,13 +40,14 @@ public class Main{
         board[7][6] = new Cell(new Knight(7, 6, 'W'));
         board[7][7] = new Cell(new Rook(7, 7, 'W'));
 
-        board[3][2] = new Cell(new Pawn(3, 2, 'B'));
-        board[4][1] = new Cell(new Pawn(4, 3, 'W'));
+        // board[3][2] = new Cell(new Pawn(3, 2, 'B'));
+        // board[4][1] = new Cell(new Pawn(4, 3, 'W'));
 
+        board[3][0] = new Cell(new Rook(3, 0, 'B'));
 
         printBoard();
 
-        ArrayList<List> pMoves = generateMoves(4, 1);
+        ArrayList<List> pMoves = generateMoves(3, 0);
 
         System.out.println(pMoves);
         
@@ -60,6 +65,10 @@ public class Main{
         if (cell.p1 instanceof Pawn){
             return generateMovesForPawn((Pawn) cell.p1);
         }        
+
+        if (cell.p1 instanceof Rook){
+            return generateMovesForRook((Rook) cell.p1);
+        }
         
         return null;
     }
@@ -130,12 +139,80 @@ public class Main{
 
         return pawnMoves;
     }
+    
+    public static ArrayList<List> generateMovesForRook(Rook rook){
+        int[][] directions = {{1,0}, {-1,0}, {0,-1}, {0,1}};
+        
+        ArrayList<List> validMoves = new ArrayList<>();
 
-    private static boolean isInBounds(int row, int col){
-        return row < 8 && col < 8;
+        for (int i = 0; i < directions.length; i++){
+            int r = directions[i][0], c = directions[i][1];
+
+            int curRow = rook.row + r, curCol = rook.col + c;
+
+            while (isInBounds(curRow, curCol)) {
+                if (!isValid(curRow, curCol)) {
+                    if (board[curRow][curCol].p1.player != rook.player){
+                        validMoves.add(Arrays.asList(curRow, curCol));
+                    }
+                    break;
+                }
+                validMoves.add(Arrays.asList(curRow, curCol));
+                curRow += r;
+                curCol += c;
+            }
+
+        }
+        // for (int row = rook.row + 1; row < 8; row++){
+        //     if (!isValid(row, rook.col)) {
+        //         if (board[row][rook.col].p1.player != rook.player){
+        //             validMoves.add(Arrays.asList(row, rook.col));
+        //         }
+
+        //         break;
+        //     }
+        //     validMoves.add(Arrays.asList(row, rook.col));
+        // }
+
+        // for (int row = rook.row + 1; row < 8; row++){
+        //     if (!isValid(row, rook.col)) {
+        //         if (board[row][rook.col].p1.player != rook.player){
+        //             validMoves.add(Arrays.asList(row, rook.col));
+        //         }
+
+        //         break;
+        //     }
+        //     validMoves.add(Arrays.asList(row, rook.col));
+        // }
+
+        // for (int row = rook.row + 1; row < 8; row++){
+        //     if (!isValid(row, rook.col)) {
+        //         if (board[row][rook.col].p1.player != rook.player){
+        //             validMoves.add(Arrays.asList(row, rook.col));
+        //         }
+
+        //         break;
+        //     }
+        //     validMoves.add(Arrays.asList(row, rook.col));
+        // }
+
+        // for (int row = rook.row + 1; row < 8; row++){
+        //     if (!isValid(row, rook.col)) {
+        //         if (board[row][rook.col].p1.player != rook.player){
+        //             validMoves.add(Arrays.asList(row, rook.col));
+        //         }
+
+        //         break;
+        //     }
+        //     validMoves.add(Arrays.asList(row, rook.col));
+        // }
+       
+        return validMoves;
     }
 
-
+    private static boolean isInBounds(int row, int col){
+        return row >= 0 && row < 8 && col >=0 && col < 8;
+    }
 
     private static boolean toCapture(int row, int col, char player){
         if(isInBounds(row, col) && (board[row][col]!= null) && board[row][col].p1.player != player){
@@ -146,7 +223,7 @@ public class Main{
 
     private  static boolean isValid(int row,int col){
         if(board[row][col]== null){
-            return  true;
+            return true;
         }
         return false;
     }
