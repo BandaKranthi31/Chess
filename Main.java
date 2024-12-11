@@ -40,16 +40,17 @@ public class Main{
         board[7][6] = new Cell(new Knight(7, 6, 'W'));
         board[7][7] = new Cell(new Rook(7, 7, 'W'));
 
-        // board[3][2] = new Cell(new Pawn(3, 2, 'B'));
+        // board[4][2] = new Cell(new Pawn(4, 2, 'B'));
         // board[4][1] = new Cell(new Pawn(4, 3, 'W'));
 
         // board[3][0] = new Cell(new Rook(3, 0, 'B'));
-
-        board[4][2] = new Cell(new Bishop(4, 2, 'B'));
+        // 
+        board[3][4] = new Cell(new Queen(3, 4, 'B'));
+    
 
         printBoard();
 
-        ArrayList<List> pMoves = generateMoves(4, 2);
+        ArrayList<List> pMoves = generateMoves(3, 4);
 
         System.out.println(pMoves);
         
@@ -65,21 +66,31 @@ public class Main{
         Cell cell = board[row][col];
 
         if (cell.p1 instanceof Pawn){
-            return generateMovesForPawn((Pawn) cell.p1);
+            return generateMovesForPawn( row, col);
         }        
 
         if (cell.p1 instanceof Rook){
-            return generateMovesForRook((Rook) cell.p1);
+            return generateMovesForRook( row,col);
         }
 
         if (cell.p1 instanceof Bishop){
-            return generateMovesForBishop((Bishop) cell.p1);
+            return generateMovesForBishop(row, col);
+        }
+
+        if(cell.p1 instanceof King){
+            return generateMovesForKing(row, col);
+        }
+
+        if(cell.p1 instanceof Queen){
+            return  generateMovesForQueen(row, col);
         }
         
         return null;
     }
 
-    public static ArrayList<List> generateMovesForPawn(Pawn pawn){
+
+    public static ArrayList<List> generateMovesForPawn( int row , int col){
+        Pawn pawn = new Pawn(row, col, board[row][col].p1.player);
         ArrayList<List> pawnMoves = new ArrayList<>();
 
         if (pawn.player == 'B'){
@@ -138,15 +149,11 @@ public class Main{
             }
         }
 
-      
-
-        
-
-
         return pawnMoves;
     }
     
-    public static ArrayList<List> generateMovesForRook(Rook rook){
+    public static ArrayList<List> generateMovesForRook(int row , int col){
+        Rook rook = new Rook(row, col,board[row][col].p1.player);
         int[][] directions = {{1,0}, {-1,0}, {0,-1}, {0,1}};
         
         ArrayList<List> validMoves = new ArrayList<>();
@@ -216,7 +223,8 @@ public class Main{
         return validMoves;
     }
 
-    public static ArrayList<List> generateMovesForBishop(Bishop bishop){
+    public static ArrayList<List> generateMovesForBishop(int row, int col){
+        Bishop bishop = new Bishop(row, col, board[row][col].p1.player);
         int[][] directions = {{1,1}, {1,-1}, {-1,-1}, {-1,1}};
         
         ArrayList<List> validMoves = new ArrayList<>();
@@ -239,6 +247,46 @@ public class Main{
             }
 
         }
+        return validMoves;
+    }
+
+    public static ArrayList<List> generateMovesForKing(int row, int col){
+        King king = new King(row, col, board[row][col].p1.player);
+        ArrayList<List> validMoves = new ArrayList<>();
+        int[][] directions = {{1,1},{1,-1},{-1,-1},{-1,1},{0,1},{1,0},{-1,0},{0,-1}};
+
+        for(int i =0;i<directions.length;i++){
+            int r = directions[i][0], c = directions[i][1];
+            int curRow = king.row + r, curCol = king.col+c;
+            if(isInBounds(curRow, curCol)){
+                if( null == board[curRow][curCol]  || board[curRow][curCol].p1.player != king.player ){
+                   validMoves.add(Arrays.asList(curRow,curCol));
+                }
+            
+            }
+            
+        }
+
+        return validMoves;
+    }
+
+    private static  ArrayList<List> generateMovesForQueen(int row, int col){
+    // HashSet<List> validMoves = new HashSet<>();
+    ArrayList<List> validMoves = new ArrayList<>();
+
+    
+        ArrayList<List> bishopMoves = generateMovesForBishop(row,col);
+        ArrayList<List> rookMoves = generateMovesForRook(row, col);
+
+
+        int k = bishopMoves.size();
+        int s =rookMoves.size();
+        System.out.println(k+s);
+
+        validMoves.add(rookMoves);
+        validMoves.add(bishopMoves);
+        System.out.println(validMoves.size());
+
         return validMoves;
     }
 
