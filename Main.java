@@ -45,7 +45,7 @@ public class Main{
 
         // board[3][0] = new Cell(new Rook(3, 0, 'B'));
         // 
-        board[3][4] = new Cell(new Queen(3, 4, 'B'));
+        board[3][4] = new Cell(new Knight(3, 4, 'B'));
     
 
         printBoard();
@@ -83,6 +83,9 @@ public class Main{
 
         if(cell.p1 instanceof Queen){
             return  generateMovesForQueen(row, col);
+        }
+        if(cell.p1 instanceof Knight){
+            return generateMovesForKnight(row, col);
         }
         
         return null;
@@ -288,6 +291,45 @@ public class Main{
         System.out.println(validMoves.size());
 
         return validMoves;
+    }
+
+    private  static ArrayList<List> generateMovesForKnight(int row, int col){
+        Knight knight = new Knight(row, col, board[row][col].p1.player);
+       ArrayList<List> validMoves = new ArrayList<>();
+       //TOP
+       if(isInBounds(row-2, col+1) &&( null == board[row-2][col+1]  || board[row-2][col+1].p1.player != knight.player)  ){
+        validMoves.add(Arrays.asList(row-2,col+1));
+       }
+       if(isInBounds(row-2, col-1) &&(  null == board[row-2][col-1] ||board[row-2][col-1].p1.player != knight.player ) ){
+        validMoves.add(Arrays.asList(row-2,col-1));
+       }
+
+       //BOTTOM
+       if(isInBounds(row+2, col-1)  && ( null ==  board[row+2][col-1]  ||board[row+2][col-1].p1.player != knight.player  )  ){
+        validMoves.add(Arrays.asList(row+2,col-1));
+       }
+       if(isInBounds(row+2, col+1)  && (  null == board[row+2][col+1] || board[row+2][col+1].p1.player != knight.player) ){
+        validMoves.add(Arrays.asList(row+2,col+1));
+       }
+
+       //RIGHT
+       if(isInBounds(row+1, col-2) &&(  null == board[row+1][col-2] ||  board[row+1][col-2].p1.player != knight.player ) ){
+        validMoves.add(Arrays.asList(row+1,col-2));
+       }
+       if(isInBounds(row-1, col+2) &&(  null == board[row-1][col+2] ||  board[row-1][col+2].p1.player != knight.player  ) ){
+        validMoves.add(Arrays.asList(row-1,col+2));
+       }
+
+       //LEFT
+       if(isInBounds(row+1, col-2)  &&(  null == board[row+1][col-2] || board[row+1][col-2].p1.player != knight.player  ) ){
+        validMoves.add(Arrays.asList(row-1,col-2));
+       }
+       if(isInBounds(row-1, col-2)  && (   null == board[row-1][col-2] || board[row-1][col-2].p1.player != knight.player )){
+        validMoves.add(Arrays.asList(row-1,col+2));
+       }
+
+
+       return validMoves;
     }
 
     private static boolean isInBounds(int row, int col){
