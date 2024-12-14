@@ -1,4 +1,4 @@
-package com.clichess.pieces;
+package com.clichess.chess.pieces;
 public class Pawn extends Piece {
     
     public boolean hasMadeFirstMove;

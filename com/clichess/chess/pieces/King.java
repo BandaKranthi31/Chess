@@ -1,4 +1,5 @@
-package com.clichess.pieces;
+package com.clichess.chess.pieces;
+
 public class King extends Piece {
 
     public King(int row, int col, char player){
