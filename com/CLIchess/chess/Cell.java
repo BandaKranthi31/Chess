@@ -1,6 +1,6 @@
-package com.clichess.chess;
+package com.CLIchess.chess;
 
-import com.clichess.chess.pieces.*;
+import com.CLIchess.chess.pieces.*;
 
 
 public class Cell {

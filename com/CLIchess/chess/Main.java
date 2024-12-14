@@ -1,10 +1,10 @@
-package com.clichess.chess;
+package com.CLIchess.chess;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.clichess.chess.pieces.*;
+import com.CLIchess.chess.pieces.*;
 
 public class Main{
     static Cell[][] board;

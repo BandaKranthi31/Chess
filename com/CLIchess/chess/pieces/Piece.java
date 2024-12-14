@@ -1,4 +1,4 @@
-package com.clichess.chess.pieces;
+package com.CLIchess.chess.pieces;
 
 public class Piece {
    public int row, col;
