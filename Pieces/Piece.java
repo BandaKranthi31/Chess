@@ -1,7 +1,7 @@
 public class Piece {
-    int row, col;
+   public int row, col;
     
-    char player;
+   public char player;
 
     public Piece(int row, int col, char player){
         this.row = row;
