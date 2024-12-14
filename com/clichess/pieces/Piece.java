@@ -1,3 +1,4 @@
+package com.clichess.pieces;
 public class Piece {
    public int row, col;
     
